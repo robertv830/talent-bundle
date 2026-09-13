@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Talent Bundle | Customized Recruiting Solutions</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Supabase Client Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --navy: #083870;
@@ -21,13 +23,15 @@
       --radius-sm: 8px;
     }
 
+
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
     body { background-color: var(--cream); color: var(--text); line-height: 1.6; }
 
-    /* HEADER & NAV */
+
+    /* HEADER & NAV FIXED ALIGNMENT */
     header {
       background: var(--white);
-      padding: 0.9rem 5%;
+      padding: 0.8rem 5%;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -37,70 +41,125 @@
       z-index: 1000;
     }
 
+
     .logo-container {
       display: flex;
       align-items: center;
-      gap: 14px;
       cursor: pointer;
     }
 
-    .logo-badge-graphic {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, var(--navy) 65%, var(--orange) 100%);
+
+    .brand-logo-badge {
+      display: flex;
+      align-items: center;
+      background: #083870;
+      padding: 6px 12px;
+      border-radius: 4px;
+      gap: 10px;
+    }
+    .logo-icon-circle {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #ea580c 100%);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--white);
+      color: white;
       font-weight: 800;
-      font-size: 1.35rem;
-      letter-spacing: -0.5px;
-      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.2);
+      font-size: 0.95rem;
+      letter-spacing: -1px;
     }
+    .logo-text-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .logo-title-row {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      line-height: 1.1;
+    }
+    .logo-title-talent { color: #ffffff; font-weight: 700; font-size: 1.1rem; }
+    .logo-title-bundle { color: #ea580c; font-weight: 700; font-size: 1.1rem; }
+    .logo-tagline { color: #93c5fd; font-size: 0.55rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 1px; }
 
-    .brand-title {
-      font-size: 1.45rem;
-      font-weight: 800;
-      color: var(--navy);
-      line-height: 1.0;
-      letter-spacing: -0.3px;
-    }
-
-    .brand-tagline {
-      font-size: 0.68rem;
-      color: var(--orange);
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      margin-top: 3px;
-    }
 
     nav {
       display: flex;
-      gap: 1.8rem;
+      gap: 1.5rem;
       align-items: center;
     }
+
 
     nav a {
       text-decoration: none;
       color: var(--navy);
       font-weight: 700;
-      font-size: 0.98rem;
-      padding-bottom: 4px;
+      font-size: 0.95rem;
+      padding-bottom: 4px 0;
       border-bottom: 3px solid transparent;
       cursor: pointer;
       transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
     }
+
 
     nav a:hover, nav a.active {
       color: var(--navy);
       border-bottom: 3px solid var(--orange);
     }
 
+
+    /* DROPDOWN MENU STYLING */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: var(--white);
+      min-width: 210px;
+      box-shadow: 0 10px 25px rgba(8, 56, 112, 0.12);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      z-index: 1001;
+      top: 100%;
+      left: 0;
+      padding: 0.5rem 0;
+    }
+
+
+    .dropdown-content a {
+      color: var(--navy);
+      padding: 8px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 0.9rem;
+      border-bottom: none !important;
+      text-align: left;
+    }
+
+
+    .dropdown-content a:hover {
+      background-color: var(--light-blue);
+      color: var(--orange);
+    }
+
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+
     /* Page Visibility Controls */
     .page { display: none; }
     .page.active { display: block; }
+
 
     /* HERO & HEADERS */
     .hero-banner {
@@ -117,15 +176,18 @@
       min-height: 480px;
     }
 
+
     .hero-content { max-width: 680px; text-align: left; }
     .hero-eyebrow { color: var(--orange); font-size: 0.9rem; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 1rem; display: block; }
-    .hero-banner h1 { font-size: 3.2rem; line-height: 1.12; font-weight: 800; margin-bottom: 1.1rem; color: var(--white); letter-spacing: -0.5px; }
+    .hero-banner h1 { font-size: 2.8rem; line-height: 1.15; font-weight: 800; margin-bottom: 1.1rem; color: var(--white); letter-spacing: -0.5px; }
     .hero-banner p { font-size: 1.15rem; color: var(--light-blue); margin-bottom: 2.2rem; line-height: 1.6; font-weight: 400; }
     .hero-buttons { display: flex; gap: 18px; flex-wrap: wrap; }
+
 
     .page-header { background: var(--navy); color: var(--white); padding: 3.5rem 8%; text-align: center; }
     .page-header h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
     .page-header p { color: var(--light-blue); font-size: 1.1rem; max-width: 680px; margin: 0 auto; }
+
 
     /* BUTTONS */
     .btn {
@@ -143,10 +205,12 @@
       text-align: center;
     }
 
+
     .btn-orange { background: var(--orange); color: var(--white); border: none; box-shadow: 0 4px 12px rgba(236, 108, 28, 0.3); }
     .btn-orange:hover { background: var(--orange-hover); transform: translateY(-2px); }
     .btn-white { background: var(--white); color: var(--navy); border: 1px solid var(--border-color); }
     .btn-white:hover { background: var(--light-blue); transform: translateY(-2px); }
+
 
     /* LAYOUT & CARDS */
     .container { max-width: 1100px; margin: 4rem auto; padding: 0 1.5rem; }
@@ -154,8 +218,10 @@
     .section-title { text-align: center; font-size: 2.3rem; color: var(--navy); margin-bottom: 0.4rem; font-weight: 800; }
     .section-subtitle { text-align: center; color: var(--text-muted); font-size: 1.05rem; margin-bottom: 3rem; }
 
+
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
     .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+
 
     .card {
       background: var(--white);
@@ -166,6 +232,7 @@
       display: flex;
       flex-direction: column;
     }
+
 
     .service-card-interactive {
       cursor: pointer;
@@ -189,25 +256,61 @@
       gap: 5px;
     }
 
+
     .service-details-drawer {
       display: none;
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px dashed var(--border-color);
-      background: var(--cream);
+      margin-top: 1.2rem;
       padding: 1.2rem;
+      border: 1px dashed var(--border-color);
+      background: var(--cream);
       border-radius: var(--radius-sm);
     }
     .service-details-drawer.active { display: block; }
+   
+    .contract-drawer {
+      display: none;
+      margin-top: 1rem;
+      padding: 1.2rem;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      color: #166534;
+      line-height: 1.5;
+    }
+    .contract-drawer.active { display: block; }
+
+
     .detail-list { list-style: none; margin: 0.8rem 0; font-size: 0.92rem; color: var(--text); }
     .detail-list li { margin-bottom: 6px; padding-left: 18px; position: relative; }
     .detail-list li::before { content: "✓"; position: absolute; left: 0; color: var(--orange); font-weight: bold; }
-    .price-tag { font-size: 0.9rem; font-weight: 800; color: var(--navy); background: var(--light-blue); padding: 4px 10px; border-radius: 6px; display: inline-block; margin-bottom: 1rem; }
+
 
     .card p { color: var(--text-muted); font-size: 0.98rem; line-height: 1.6; flex-grow: 1; }
     .card h3 { font-size: 1.35rem; color: var(--navy); font-weight: 800; margin-bottom: 0.5rem; }
 
+
     .divider { height: 1px; background: var(--border-color); margin: 4rem 0; }
+
+
+    /* PRICING & CONTRACT BOXES */
+    .pricing-box {
+      background: var(--white);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .price-tag {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--orange);
+      margin: 1rem 0 0.5rem;
+    }
+
 
     /* CLIENT DASHBOARD PANEL */
     .dashboard-panel { background: var(--white); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2.5rem; margin-top: 3rem; }
@@ -215,6 +318,7 @@
     .stat-box { background: var(--cream); border-radius: var(--radius-sm); padding: 1.5rem; text-align: center; border: 1px solid var(--border-color); }
     .stat-num { font-size: 2.2rem; font-weight: 800; color: var(--navy); }
     .stat-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+
 
     .pipeline-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
     .candidate-card {
@@ -242,11 +346,12 @@
     .stage-offer { background: #dcfce7; color: #15803d; }
     .stage-screen { background: #fef3c7; color: #b45309; }
 
+
     /* FORM STYLING & KEYWORD CHECKBOXES */
     .resume-upload-box { background: var(--white); border: 2px dashed var(--orange); border-radius: var(--radius-lg); padding: 2.5rem; text-align: center; margin-bottom: 3rem; }
     .form-group { display: flex; gap: 15px; max-width: 650px; margin: 1.5rem auto 0; flex-wrap: wrap; }
     .form-input { flex: 1; min-width: 200px; padding: 12px 18px; border: 1px solid var(--border-color); border-radius: 30px; font-size: 0.95rem; outline: none; background: var(--white); }
-    
+   
     .checkbox-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -258,6 +363,7 @@
     }
     .checkbox-grid label { display: flex; align-items: center; gap: 8px; cursor: pointer; background: var(--cream); padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); }
 
+
     .job-list-card {
       background: var(--white);
       border: 1px solid var(--border-color);
@@ -268,30 +374,69 @@
       justify-content: space-between;
       align-items: center;
     }
-    .job-meta { display: flex; gap: 15px; margin-top: 8px; font-size: 0.88rem; color: var(--text-muted); flex-wrap: wrap; }
+    .job-meta { display: flex; gap: 15px; margin-top: 8px; font-size: 0.88rem; color: var(--text-muted); flex-wrap: wrap; align-items: center; }
     .job-badge { background: var(--light-blue); color: var(--navy); padding: 3px 10px; border-radius: 12px; font-weight: 600; }
+    .job-salary { color: var(--orange); font-weight: 700; }
 
-    /* Floating Chat */
-    .chat-widget {
+
+    /* MODAL STYLING */
+    .modal {
+      display: none;
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--navy);
-      color: var(--white);
-      padding: 10px 18px;
-      border-radius: 30px;
-      font-weight: 700;
-      font-size: 0.88rem;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-      cursor: pointer;
-      display: flex;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(8, 56, 112, 0.6);
+      backdrop-filter: blur(4px);
       align-items: center;
-      gap: 8px;
-      z-index: 1000;
+      justify-content: center;
+      padding: 1rem;
     }
-    .chat-icon-dot { width: 12px; height: 12px; background: var(--orange); border-radius: 50%; }
+    .modal.active {
+      display: flex;
+    }
+    .modal-content {
+      background: var(--white);
+      padding: 2.2rem;
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 550px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    .close {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .close:hover { color: var(--navy); }
+    .modal-content h2 { color: var(--navy); margin-bottom: 1rem; font-size: 1.4rem; }
+    .modal-job-desc-box {
+      background: var(--cream);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      max-height: 120px;
+      overflow-y: auto;
+    }
+    .modal-content form { display: flex; flex-direction: column; gap: 12px; }
+    .modal-content label { font-weight: 700; color: var(--navy); font-size: 0.88rem; }
+    .modal-content input { padding: 10px 15px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 0.95rem; outline: none; width: 100%; }
+
 
     footer { text-align: center; padding: 2.5rem; border-top: 1px solid var(--border-color); background: var(--white); color: var(--text-muted); font-size: 0.95rem; }
+
 
     /* MOBILE OPTIMIZATIONS */
     @media (max-width: 768px) {
@@ -310,37 +455,57 @@
       .form-group { flex-direction: column; }
       .form-input { width: 100%; }
       .resume-upload-box { padding: 1.5rem; }
-      .chat-widget { bottom: 15px; right: 15px; padding: 8px 14px; font-size: 0.8rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER & NAVIGATION -->
+
+  <!-- HEADER & NAVIGATION WITH RECONSTRUCTED LOGO BADGE -->
   <header>
     <div class="logo-container" onclick="showPage('home')">
-      <div class="logo-badge-graphic">TB</div>
-      <div>
-        <div class="brand-title">Talent Bundle</div>
-        <div class="brand-tagline">Recruiting Solution</div>
+      <div class="brand-logo-badge">
+        <div class="logo-icon-circle">TB</div>
+        <div class="logo-text-group">
+          <div class="logo-title-row">
+            <span class="logo-title-talent">Talent</span>
+            <span class="logo-title-bundle">Bundle</span>
+          </div>
+          <span class="logo-tagline">YOUR CUSTOMIZED RECRUITING SOLUTION</span>
+        </div>
       </div>
     </div>
     <nav>
-      <a onclick="showPage('home')" id="nav-home" class="active">Home</a>
-      <a onclick="showPage('services')" id="nav-services">Services</a>
-      <a onclick="showPage('employers')" id="nav-employers">For Employers</a>
-      <a onclick="showPage('careers')" id="nav-careers">Careers</a>
-      <a onclick="showPage('contact')" id="nav-contact">Contact Us</a>
+      <div class="dropdown">
+        <a onclick="showPage('home')" id="nav-home" class="active">Home</a>
+        <div class="dropdown-content">
+          <a onclick="showPage('about'); event.stopPropagation();">About Us</a>
+        </div>
+      </div>
+
+
+      <div class="dropdown">
+        <a onclick="showPage('employers')" id="nav-employers">For Employers</a>
+        <div class="dropdown-content">
+          <a onclick="showPage('services'); event.stopPropagation();">Services & Pricing</a>
+          <a onclick="showPage('contact'); event.stopPropagation();">Contact Us</a>
+        </div>
+      </div>
+
+
+      <a onclick="showPage('candidates')" id="nav-candidates">For Candidates</a>
+      <a onclick="showPage('careers')" id="nav-careers">Careers & Jobs</a>
     </nav>
   </header>
+
 
   <!-- HOME PAGE -->
   <div id="page-home" class="page active">
     <div class="hero-banner">
       <div class="hero-content">
-        <span class="hero-eyebrow">Customized Recruiting Solutions</span>
-        <h1>Scale Your Team with Vetted Talent</h1>
-        <p>We blend elite recruitment expertise with streamlined hiring bundles to connect growing companies with exceptional professionals.</p>
+        <span class="hero-eyebrow">People + Precision + Performance</span>
+        <h1>Customized Recruiting Solution</h1>
+        <p>Connecting growing enterprises with elite professional talent tailored precisely to your organization's unique operational needs.</p>
         <div class="hero-buttons">
           <a class="btn btn-orange" onclick="showPage('employers')">Hire Top Talent</a>
           <a class="btn btn-white" onclick="showPage('careers')">Explore Careers</a>
@@ -348,14 +513,30 @@
       </div>
     </div>
 
+
     <div class="container">
+      <div class="section-accent-bar"></div>
+      <h2 class="section-title">Who We Are & What We Do</h2>
+      <p class="section-subtitle">A legacy of excellence scaling high-growth teams across diverse industries</p>
+
+
+      <div class="card" style="padding: 2.5rem; margin-bottom: 3rem;">
+        <p style="font-size: 1.08rem; line-height: 1.8; color: var(--text); margin-bottom: 1.2rem;">
+          Talent Bundle has a proven history of recruiting top-tier talent for organizations ranging from nimble early-stage startups to Fortune 500 enterprises (including companies ranked in the top 10). Our expertise spans a wide variety of dynamic industries, including tech, insurance, clearance-required roles, and specialized executive sectors.
+        </p>
+        <p style="font-size: 1.08rem; line-height: 1.8; color: var(--text);">
+          We firmly believe that every company is distinct, with its own culture, goals, and technical challenges. That is why our core mantra is a <strong>customized recruiting solution</strong>—we know that offering the highest quality service requires adapting directly to the specific needs of your company rather than applying a rigid template.
+        </p>
+      </div>
+
+
       <div class="section-accent-bar"></div>
       <h2 class="section-title">Core Recruiting Solutions</h2>
       <p class="section-subtitle">Flexible engagement models designed for modern hiring needs</p>
 
+
       <div class="grid-3">
         <div class="card service-card-interactive" onclick="toggleDrawer('drawer-1')">
-          <span class="price-tag">Model 01</span>
           <h3>Full-Cycle Recruitment</h3>
           <p>End-to-end management from job scoping and sourcing to screening, interviewing, and final offer negotiation.</p>
           <div class="click-prompt">View Details &rarr;</div>
@@ -369,32 +550,30 @@
           </div>
         </div>
 
+
         <div class="card service-card-interactive" onclick="toggleDrawer('drawer-2')">
-          <span class="price-tag">Model 02</span>
-          <h3>Talent Bundle Sourcing</h3>
-          <p>Targeted top-of-funnel candidate generation to supercharge your internal recruiting team's pipeline.</p>
+          <h3>Contractor Staffing</h3>
+          <p>Flexible contractor placement options to immediately scale your workforce with vetted experts for project-based demands.</p>
           <div class="click-prompt">View Details &rarr;</div>
           <div id="drawer-2" class="service-details-drawer">
             <ul class="detail-list">
-              <li>Pre-vetted active & passive talent</li>
-              <li>Boolean search & outreach campaigns</li>
-              <li>High-volume screening blocks</li>
-              <li>Delivered directly to your ATS</li>
+              <li>Rapid vetting and deployment</li>
+              <li>Short-term & long-term options</li>
+              <li>Complete payroll & compliance handling</li>
             </ul>
           </div>
         </div>
 
+
         <div class="card service-card-interactive" onclick="toggleDrawer('drawer-3')">
-          <span class="price-tag">Model 03</span>
-          <h3>Executive & Niche Search</h3>
-          <p>Confidential, retained or contingency searches for leadership roles and highly specialized technical profiles.</p>
+          <h3>Recruitment Process Outsourcing (RPO)</h3>
+          <p>Embed dedicated full-time recruiters directly into your operation to scale your internal hiring capacity seamlessly.</p>
           <div class="click-prompt">View Details &rarr;</div>
           <div id="drawer-3" class="service-details-drawer">
             <ul class="detail-list">
-              <li>Discreet market mapping</li>
-              <li>Deep technical/cultural vetting</li>
-              <li>Executive reference checking</li>
-              <li>Onboarding & retention support</li>
+              <li>Full operational integration</li>
+              <li>Scalable team expansion</li>
+              <li>Customized workflow branding</li>
             </ul>
           </div>
         </div>
@@ -402,40 +581,187 @@
     </div>
   </div>
 
-  <!-- SERVICES PAGE -->
+
+  <!-- ABOUT US PAGE -->
+  <div id="page-about" class="page">
+    <div class="page-header">
+      <h1>About Talent Bundle</h1>
+      <p>Learn more about our heritage, our philosophy, and our commitment to customized recruitment partnerships.</p>
+    </div>
+    <div class="container" style="max-width: 800px;">
+      <div class="card" style="padding: 2.5rem;">
+        <div class="section-accent-bar"></div>
+        <h2 class="section-title" style="font-size: 2rem; margin-bottom: 1.5rem;">Our Story & Approach</h2>
+       
+        <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text); margin-bottom: 1.2rem;">
+          Talent Bundle was founded on a simple principle: recruitment should never be a one-size-fits-all transaction. Having built successful hiring pipelines for organizations ranging from fast-moving early-stage startups to top 10 Fortune 500 corporations, we understand that finding elite talent requires deep domain expertise and operational agility.
+        </p>
+        <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text); margin-bottom: 1.2rem;">
+          Our industry footprint covers complex verticals such as advanced technology, insurance, clearance-cleared positions, and executive leadership. Across all these domains, our mantra remains steadfast: <strong>People + Precision + Performance = Customized Recruiting Solution</strong>.
+        </p>
+        <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text);">
+          By matching our service delivery precisely to your internal requirements, timeline, and company culture, we ensure long-term retention and high-impact placements.
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- SERVICES & PRICING PAGE -->
   <div id="page-services" class="page">
     <div class="page-header">
-      <h1>Our Services</h1>
-      <p>Comprehensive recruitment services built to accelerate growth and secure top-tier candidates.</p>
+      <h1>Employer Services & Pricing</h1>
+      <p>Transparent pricing models, contractor staffing, RPO options, and direct contract previews.</p>
     </div>
     <div class="container">
       <div class="section-accent-bar"></div>
-      <h2 class="section-title">How We Partner With You</h2>
-      <p class="section-subtitle">Flexible solutions tailored to your team's exact capacity</p>
-      
-      <div class="grid-2">
-        <div class="card">
-          <h3>Retained Search Partnership</h3>
-          <p>Best for critical leadership or high-stakes technical roles. We act as an extension of your executive team with dedicated time and guaranteed deliverables.</p>
+      <h2 class="section-title">Our Engagement Models & Pricing</h2>
+      <p class="section-subtitle">Flexible structures tailored to your team's exact capacity and budget</p>
+     
+      <div class="grid-2" style="margin-bottom: 3rem;">
+        <!-- Contingency Search -->
+        <div class="pricing-box">
+          <div>
+            <h3>Contingency Search Model</h3>
+            <p style="margin-top: 10px;">Best for standard professional, technical, and operational roles where you only pay upon successful hire and candidate retention.</p>
+            <div class="price-tag">15% - 22% <span style="font-size:0.9rem; font-weight:600; color:var(--text-muted);">of first-year salary</span></div>
+          </div>
+          <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); paddingTop: 1.2rem; display: flex; flex-direction: column; gap: 10px;">
+            <button class="btn btn-white" onclick="toggleDrawer('c-details-1')">View Expectation Details</button>
+            <div id="c-details-1" class="service-details-drawer">
+              <ul class="detail-list">
+                <li>No upfront fees; performance-based billing</li>
+                <li>Full active market sourcing & candidate screening</li>
+                <li>Coordination through interview rounds to offer sign-off</li>
+              </ul>
+            </div>
+            <button class="btn btn-white" onclick="toggleDrawer('c-contract-1')" style="background: #f0fdf4; border-color: #bbf7d0; color: #166534;">View Sample Contract</button>
+            <div id="c-contract-1" class="contract-drawer">
+              <strong>Sample Contingency Agreement Outline:</strong><br>
+              Client agrees to pay Talent Bundle a fee equal to 15-22% of the candidate’s annualized first-year base salary upon successful placement. Includes a 90-day replacement guarantee window.
+            </div>
+          </div>
         </div>
-        <div class="card">
-          <h3>Project-Based Hiring Bundles</h3>
-          <p>Ideal for scaling a new department or launching a product line. Fixed-term hiring sprints designed to deliver multiple qualified hires on a predictable timeline.</p>
+
+
+        <!-- Retained Executive Search -->
+        <div class="pricing-box">
+          <div>
+            <h3>Retained Executive Search</h3>
+            <p style="margin-top: 10px;">Ideal for critical leadership and C-suite roles. Dedicated search team with market mapping, guaranteed deliverables, and milestone invoicing.</p>
+            <div class="price-tag">25% <span style="font-size:0.9rem; font-weight:600; color:var(--text-muted);">(1/3, 1/3, 1/3 split)</span></div>
+          </div>
+          <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); paddingTop: 1.2rem; display: flex; flex-direction: column; gap: 10px;">
+            <button class="btn btn-white" onclick="toggleDrawer('c-details-2')">View Expectation Details</button>
+            <div id="c-details-2" class="service-details-drawer">
+              <ul class="detail-list">
+                <li>Exclusive dedicated executive search partner</li>
+                <li>Comprehensive industry-wide discreet market mapping</li>
+                <li>Rigorous leadership assessments and reference checks</li>
+              </ul>
+            </div>
+            <button class="btn btn-white" onclick="toggleDrawer('c-contract-2')" style="background: #f0fdf4; border-color: #bbf7d0; color: #166534;">View Sample Contract</button>
+            <div id="c-contract-2" class="contract-drawer">
+              <strong>Sample Retained Agreement Outline:</strong><br>
+              Retainer billed in three equal installments (upon signing, at 30 days shortlist presentation, and upon executive placement). 25% total fee against first-year compensation package.
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="grid-2" style="margin-bottom: 3rem;">
+        <!-- Contractor Staffing Model -->
+        <div class="pricing-box">
+          <div>
+            <h3>Contractor Staffing</h3>
+            <p style="margin-top: 10px;">Flexible talent solutions for companies needing specialized skills on a project basis. We handle vetting, placement, and administrative payroll compliance.</p>
+            <div class="price-tag">Markup / Hourly Structure</div>
+          </div>
+          <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); paddingTop: 1.2rem; display: flex; flex-direction: column; gap: 10px;">
+            <button class="btn btn-white" onclick="toggleDrawer('c-details-contractor')">View Expectation Details</button>
+            <div id="c-details-contractor" class="service-details-drawer">
+              <ul class="detail-list">
+                <li>Fast deployment of pre-vetted contractors</li>
+                <li>Flexible hours and project timeline adjustments</li>
+                <li>Full management of tax and compliance obligations</li>
+              </ul>
+            </div>
+            <button class="btn btn-white" onclick="toggleDrawer('c-contract-contractor')" style="background: #f0fdf4; border-color: #bbf7d0; color: #166534;">View Sample Contract</button>
+            <div id="c-contract-contractor" class="contract-drawer">
+              <strong>Sample Contractor Agreement Outline:</strong><br>
+              Agreed standard bill rate incorporating worker compensation and administrative overhead, invoiced bi-weekly on a net-15 terms basis.
+            </div>
+          </div>
+        </div>
+
+
+        <!-- RPO Model -->
+        <div class="pricing-box">
+          <div>
+            <h3>Recruitment Process Outsourcing (RPO)</h3>
+            <p style="margin-top: 10px;">Full-time embedded recruiters to run your entire recruitment function or support major scaling initiatives seamlessly.</p>
+            <div class="price-tag">Monthly Retainer / FTE Model</div>
+          </div>
+          <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); paddingTop: 1.2rem; display: flex; flex-direction: column; gap: 10px;">
+            <button class="btn btn-white" onclick="toggleDrawer('c-details-rpo')">View Expectation Details</button>
+            <div id="c-details-rpo" class="service-details-drawer">
+              <ul class="detail-list">
+                <li>Embedded recruitment professionals working with your team</li>
+                <li>Scalable capacity matching your seasonal or hyper-growth hiring goals</li>
+                <li>Infrastructure and ATS setup optimization</li>
+              </ul>
+            </div>
+            <button class="btn btn-white" onclick="toggleDrawer('c-contract-rpo')" style="background: #f0fdf4; border-color: #bbf7d0; color: #166534;">View Sample Contract</button>
+            <div id="c-contract-rpo" class="contract-drawer">
+              <strong>Sample RPO Agreement Outline:</strong><br>
+              Monthly retainer contract guaranteeing dedicated full-time equivalent (FTE) recruiting hours, subject to a 30-day notice modification window.
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- FOR EMPLOYERS PAGE (Includes Dashboard Preview) -->
+
+  <!-- FOR EMPLOYERS PAGE -->
   <div id="page-employers" class="page">
     <div class="page-header">
-      <h1>Employer Solutions</h1>
+      <h1>Employer Solutions & Pipeline</h1>
       <p>Partner with Talent Bundle to streamline your hiring pipeline and connect with elite talent.</p>
     </div>
     <div class="container">
       <div class="section-accent-bar"></div>
+      <h2 class="section-title">Comprehensive Employer Services</h2>
+      <p class="section-subtitle">Tailored options built to support your corporate hiring goals and workforce planning</p>
+
+
+      <div class="grid-3" style="margin-bottom: 2.5rem;">
+        <div class="card">
+          <h3>Contractor & Temp Staffing</h3>
+          <p>Quickly onboard specialized technical or professional contractors to support tight project deadlines without long-term structural overhead.</p>
+        </div>
+        <div class="card">
+          <h3>Recruitment Process Outsourcing (RPO)</h3>
+          <p>Integrate dedicated full-time recruiters directly into your internal teams to handle scaling hiring requirements seamlessly.</p>
+        </div>
+        <div class="card">
+          <h3>Full-Cycle & Executive Search</h3>
+          <p>Leverage contingency, retained search models, and our customized evaluation frameworks to hire high-impact permanent leaders.</p>
+        </div>
+      </div>
+
+
+      <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 4rem; flex-wrap: wrap;">
+        <a class="btn btn-orange" onclick="showPage('services')">View Services & Pricing</a>
+        <a class="btn btn-orange" onclick="showPage('contact')">Contact Us</a>
+      </div>
+
+
+      <div class="section-accent-bar"></div>
       <h2 class="section-title">Client Portal & Live Pipeline</h2>
       <p class="section-subtitle">Every employer partner gets real-time visibility into their active recruitment pipeline</p>
+
 
       <div class="dashboard-panel">
         <div class="stats-grid">
@@ -453,10 +779,12 @@
           </div>
         </div>
 
+
         <div class="pipeline-header">
           <h3 style="color: var(--navy); font-size: 1.25rem;">Active Candidate Pipeline Preview</h3>
           <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Updated Today</span>
         </div>
+
 
         <div class="candidate-card">
           <div class="candidate-info">
@@ -466,6 +794,7 @@
           <span class="stage-badge stage-interview">Final Round Interview</span>
         </div>
 
+
         <div class="candidate-card">
           <div class="candidate-info">
             <h4>Marcus Vance</h4>
@@ -473,6 +802,7 @@
           </div>
           <span class="stage-badge stage-offer">Offer Extended</span>
         </div>
+
 
         <div class="candidate-card">
           <div class="candidate-info">
@@ -485,47 +815,130 @@
     </div>
   </div>
 
-  <!-- CAREERS PAGE (For Candidates: Resume Upload + Keyword Trigger Database) -->
-  <div id="page-careers" class="page">
+
+  <!-- FOR CANDIDATES PAGE -->
+  <div id="page-candidates" class="page">
     <div class="page-header">
-      <h1>Careers & Talent Network</h1>
-      <p>Submit your resume and select your skills to be matched automatically with future open positions.</p>
+      <h1>Candidate Resources & Support</h1>
+      <p>Explore tools, market insights, and career growth portals designed to accelerate your professional journey.</p>
     </div>
     <div class="container">
+      <div class="section-accent-bar"></div>
+      <h2 class="section-title">Candidate Hub & Tools</h2>
+      <p class="section-subtitle">Specialized resources built to help you land your next great role</p>
+
+
+      <div class="grid-3" style="margin-bottom: 3rem;">
+        <div class="card">
+          <h3>Salary Grabber</h3>
+          <p>Access real-time compensation benchmarks and data analytics to understand your true market value across various tech, executive, and operational sectors.</p>
+        </div>
+        <div class="card">
+          <h3>New Horizon Careers</h3>
+          <p>Specialized transition training, resume optimization workshops, and return-to-work programs designed for professionals navigating career pivots.</p>
+        </div>
+        <div class="card">
+          <h3>Connection Match</h3>
+          <p>Our matching algorithm connects your specialized background directly with hiring managers looking for exact skill sets without endless applications.</p>
+        </div>
+      </div>
+
+
+      <div style="text-align: center; background: var(--white); padding: 2.5rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+        <h3 style="color: var(--navy); margin-bottom: 0.5rem;">Ready to view current job openings?</h3>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Head over to our live job listings and talent network portal.</p>
+        <a class="btn btn-orange" onclick="showPage('careers')">View Open Careers</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- CAREERS PAGE -->
+  <div id="page-careers" class="page">
+    <div class="page-header">
+      <h1>Careers & Job Openings</h1>
+      <p>Explore current openings or drop your resume into our database to connect with future roles.</p>
+    </div>
+    <div class="container">
+     
+      <!-- DYNAMIC JOB LISTINGS CONTAINER -->
+      <div style="margin-bottom: 3.5rem;">
+        <div class="section-accent-bar"></div>
+        <h2 class="section-title">Open Positions</h2>
+        <p class="section-subtitle">Apply directly to active roles with our partner companies</p>
+
+
+        <div id="dynamic-jobs-container">
+          <!-- Dynamically populated from Supabase jobs table -->
+          <p style="text-align: center; color: var(--text-muted);">Loading open positions...</p>
+        </div>
+      </div>
+
+
+      <!-- RESUME UPLOAD BOX CONNECTED TO SUPABASE -->
       <div class="resume-upload-box">
         <h3 style="color: var(--navy); margin-bottom: 0.5rem; font-size: 1.5rem;">Join the Talent Bundle Database</h3>
-        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 1.5rem;">Upload your resume and choose your key specialties below. Our automated trigger system will notify you the moment a matching role opens up.</p>
-        
-        <form onsubmit="event.preventDefault(); alert('Success! Your resume and keywords have been logged to our database. You will be notified when a matching role opens.');" style="max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
+        <p style="color: var(--text-muted); max-width: 650px; margin: 0 auto 1.5rem;">Not seeing a role you are looking for? Upload your resume and choose your key specialties below. We will notify you if a role opens up that meets your expectations.</p>
+       
+        <form id="talentDatabaseForm" style="max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
           <div class="form-group" style="margin: 0; width: 100%;">
-            <input type="text" placeholder="Full Name" class="form-input" required>
-            <input type="email" placeholder="Email Address" class="form-input" required>
+            <input type="text" id="fullName" placeholder="Full Name" class="form-input" required>
+            <input type="email" id="email" placeholder="Email Address" class="form-input" required>
           </div>
-          
+         
           <div style="text-align: left; margin-top: 10px;">
-            <label style="font-weight: 700; color: var(--navy); font-size: 0.95rem; display: block; margin-bottom: 8px;">Select Your Expertise Keywords (for automated role alerts):</label>
+            <label style="font-weight: 700; color: var(--navy); font-size: 0.95rem; display: block; margin-bottom: 8px;">Select Your Specialties:</label>
             <div class="checkbox-grid">
-              <label><input type="checkbox"> Software Engineering</label>
-              <label><input type="checkbox"> Product Management</label>
-              <label><input type="checkbox"> Data Science / Analytics</label>
-              <label><input type="checkbox"> Talent Acquisition</label>
-              <label><input type="checkbox"> Sales & Business Dev</label>
-              <label><input type="checkbox"> Executive Leadership</label>
-              <label><input type="checkbox"> Marketing & Growth</label>
-              <label><input type="checkbox"> Finance & Operations</label>
+              <label><input type="checkbox" name="specialty" value="Software Engineering"> Software Engineering</label>
+              <label><input type="checkbox" name="specialty" value="Product Management"> Product Management</label>
+              <label><input type="checkbox" name="specialty" value="Data Science / Analytics"> Data Science / Analytics</label>
+              <label><input type="checkbox" name="specialty" value="Talent Acquisition"> Talent Acquisition</label>
+              <label><input type="checkbox" name="specialty" value="Sales & Business Dev"> Sales & Business Dev</label>
+              <label><input type="checkbox" name="specialty" value="Executive Leadership"> Executive Leadership</label>
+              <label><input type="checkbox" name="specialty" value="Marketing & Growth"> Marketing & Growth</label>
+              <label><input type="checkbox" name="specialty" value="Finance & Operations"> Finance & Operations</label>
+            </div>
+            <div style="margin-top: 10px;">
+              <input type="text" id="customSpecialty" placeholder="Other Specialty / Custom Keyword..." class="form-input" style="width: 100%;">
             </div>
           </div>
 
-          <div style="text-align: left; margin-top: 5px;">
-            <label style="font-weight: 700; color: var(--navy); font-size: 0.95rem; display: block; margin-bottom: 5px;">Upload Resume (PDF / Doc):</label>
-            <input type="file" class="form-input" style="background: var(--cream); width: 100%;" required>
+
+          <div class="form-group" style="margin: 0; width: 100%;">
+            <input type="text" id="targetLocation" placeholder="Preferred Location (e.g. New York, NY)" class="form-input" required style="width: 100%;">
+          </div>
+         
+          <div style="text-align: left; margin-top: 10px;">
+            <label style="font-weight: 700; color: var(--navy); font-size: 0.95rem; display: block; margin-bottom: 8px;">Preferred Work Type(s):</label>
+            <div class="checkbox-grid" style="grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));">
+              <label><input type="checkbox" name="workType" value="Remote"> Remote</label>
+              <label><input type="checkbox" name="workType" value="Hybrid"> Hybrid</label>
+              <label><input type="checkbox" name="workType" value="Onsite"> Onsite</label>
+            </div>
           </div>
 
-          <button type="submit" class="btn btn-orange" style="margin-top: 10px;">Join Talent Network</button>
+
+          <div style="text-align: left; margin-top: 5px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+              <label style="font-weight: 700; color: var(--navy); font-size: 0.95rem;">Expected Salary Range</label>
+              <button type="button" onclick="showPage('services')" style="background: none; border: none; color: var(--orange); font-weight: 700; cursor: pointer; font-size: 0.88rem;">See Current Market Ranges</button>
+            </div>
+            <input type="text" id="salaryRange" placeholder="e.g. $120,000 - $150,000" class="form-input" style="width: 100%; border-radius: 30px;" required>
+          </div>
+
+
+          <div style="text-align: left; margin-top: 5px;">
+            <label style="font-weight: 700; color: var(--navy); font-size: 0.95rem; display: block; margin-bottom: 5px;">Upload Resume (PDF / Doc):</label>
+            <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" class="form-input" style="background: var(--cream); width: 100%;" required>
+          </div>
+
+
+          <button type="submit" class="btn btn-orange" style="margin-top: 10px;">Submit to Database</button>
         </form>
       </div>
 
-      <div style="text-align: center; background: var(--white); padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+
+      <div style="text-align: center; background: var(--white); padding: 2.5rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
         <h3 style="color: var(--navy); margin-bottom: 0.5rem;">Looking for general candidate support?</h3>
         <p style="color: var(--text-muted); margin-bottom: 1rem;">If you have general candidate inquiries rather than an application, reach out directly to our team.</p>
         <a href="mailto:info@talentbundlegroup.com" class="btn btn-white">Email info@talentbundlegroup.com</a>
@@ -533,7 +946,8 @@
     </div>
   </div>
 
-  <!-- CONTACT US PAGE (Interactive Employer Questionnaire & Calendly) -->
+
+  <!-- CONTACT US PAGE -->
   <div id="page-contact" class="page">
     <div class="page-header">
       <h1>Employer Contact & Consultation</h1>
@@ -543,27 +957,30 @@
       <div class="card" style="padding: 2.5rem;">
         <h3 style="margin-bottom: 0.5rem; color: var(--navy); font-size: 1.5rem;">Employer Intake Questionnaire</h3>
         <p style="margin-bottom: 2rem; color: var(--text-muted);">Complete the details below to configure your custom recruiting solution.</p>
-        
+       
         <form onsubmit="event.preventDefault(); alert('Thank you! Your employer questionnaire has been submitted. Choose a time below to finalize your consultation.');" style="display: flex; flex-direction: column; gap: 20px;">
-          
+         
           <div class="form-group" style="margin: 0; width: 100%;">
             <input type="text" placeholder="Company Name" class="form-input" required>
             <input type="text" placeholder="Contact Name & Title" class="form-input" required>
           </div>
+
 
           <div class="form-group" style="margin: 0; width: 100%;">
             <input type="email" placeholder="Work Email Address" class="form-input" required>
             <input type="text" placeholder="Phone Number" class="form-input" required>
           </div>
 
+
           <div>
             <label style="font-weight: 700; color: var(--navy); display: block; margin-bottom: 8px;">1. What type of hiring assistance are you looking for?</label>
-            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="checkbox" name="hiring_type"> Contractors / Temp</label>
-              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="checkbox" name="hiring_type"> Full-Time Employees (FTE)</label>
-              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="checkbox" name="hiring_type"> Either / Both</label>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="checkbox" name="hiring_type" value="Contractors"> Contractors / Temp Staffing</label>
+              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="checkbox" name="hiring_type" value="RPO"> Recruitment Process Outsourcing (RPO)</label>
+              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="checkbox" name="hiring_type" value="FTE"> Full-Time Employees (FTE)</label>
             </div>
           </div>
+
 
           <div>
             <label style="font-weight: 700; color: var(--navy); display: block; margin-bottom: 8px;">2. Is your company expecting layoffs or downsizing?</label>
@@ -574,15 +991,19 @@
             </div>
           </div>
 
+
           <div>
             <label style="font-weight: 700; color: var(--navy); display: block; margin-bottom: 5px;">3. Additional Details or Open Roles</label>
             <textarea placeholder="Describe the roles you are looking to fill or any specific requirements..." class="form-input" rows="4" style="width: 100%; border-radius: 12px; resize: vertical;"></textarea>
           </div>
 
+
           <button type="submit" class="btn btn-orange" style="align-self: flex-start;">Submit Employer Questionnaire</button>
         </form>
 
+
         <div class="divider" style="margin: 2.5rem 0 2rem;"></div>
+
 
         <div style="text-align: center;">
           <h3 style="color: var(--navy); margin-bottom: 0.5rem; font-size: 1.3rem;">Ready to speak right away?</h3>
@@ -593,10 +1014,20 @@
     </div>
   </div>
 
-  <!-- FLOATING CHAT WIDGET -->
-  <div class="chat-widget" onclick="alert('Live Chat: Connect with a Talent Bundle team member!')">
-    <span class="chat-icon-dot"></span> Questions? Chat with Us
-  </div>
+
+  <!-- TAWK.TO LIVE CHAT WIDGET INTEGRATION -->
+  <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/YOUR_TAWK_ID/default'; // Replace with your actual Tawk.to property embed URL
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+    })();
+  </script>
+
 
   <!-- FOOTER -->
   <footer>
@@ -604,24 +1035,29 @@
     <p style="margin-top: 4px; font-size: 0.8rem;">Your Customized Recruiting Solution</p>
   </footer>
 
-  <!-- INTERACTIVE SCRIPT -->
+
+  <!-- INTERACTIVE SCRIPT & SUPABASE LOGIC -->
   <script>
     function showPage(pageId) {
       document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
       document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
+
 
       const selectedPage = document.getElementById('page-' + pageId);
       if (selectedPage) {
         selectedPage.classList.add('active');
       }
 
+
       const activeNav = document.getElementById('nav-' + pageId);
       if (activeNav) {
         activeNav.classList.add('active');
       }
 
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
 
     function toggleDrawer(drawerId) {
       const drawer = document.getElementById(drawerId);
@@ -629,6 +1065,306 @@
         drawer.classList.toggle('active');
       }
     }
+  </script>
+
+
+  <script>
+    const supabaseUrl = 'https://nixcqymipoqxveoetduz.supabase.co';
+    const supabaseKey = 'sb_publishable_seU41t8DSsPvT8PEklQMwQ_HfE-yPMz';
+    const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+
+    // Fetch dynamic jobs from Supabase jobs table on load
+    async function fetchJobs() {
+      const container = document.getElementById('dynamic-jobs-container');
+      try {
+        const { data: jobs, error } = await _supabase
+          .from('jobs')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+
+        if (error) throw error;
+
+
+        if (!jobs || jobs.length === 0) {
+          container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No open positions at this time. Feel free to submit your resume to our database below!</p>';
+          return;
+        }
+
+
+        container.innerHTML = jobs.map(job => `
+          <div class="job-list-card">
+            <div>
+              <h3>${job.title}</h3>
+              <div class="job-meta">
+                <span class="job-badge">${job.location}</span>
+                <span class="job-badge">${job.work_type}</span>
+                <span class="job-badge">${job.availability}</span>
+                <span class="job-salary">${job.salary_range}</span>
+              </div>
+              <p style="margin-top: 10px; color: var(--text-muted); font-size: 0.92rem;">${job.description}</p>
+            </div>
+            <button class="btn btn-orange apply-job-btn" 
+              data-id="${job.id}" 
+              data-title="${job.title}" 
+              data-desc="${encodeURIComponent(job.description || '')}"
+              data-location="${encodeURIComponent(job.location || '')}">Apply Now</button>
+          </div>
+        `).join('');
+
+        // Attach event listeners to all dynamically generated Apply Now buttons
+        document.querySelectorAll('.apply-job-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const jobId = btn.getAttribute('data-id');
+            const jobTitle = btn.getAttribute('data-title');
+            const jobDesc = decodeURIComponent(btn.getAttribute('data-desc'));
+            const jobLocation = decodeURIComponent(btn.getAttribute('data-location'));
+
+            document.getElementById('modal-job-title').textContent = jobTitle;
+            document.getElementById('modal-job-id').value = jobId;
+            document.getElementById('modal-job-description').textContent = jobDesc || 'No detailed description provided.';
+            
+            // Prefill or set the location field placeholder/value to the job's location
+            const locationInput = document.getElementById('applicant-location');
+            locationInput.value = jobLocation; 
+
+            document.getElementById('application-modal').classList.add('active');
+          });
+        });
+
+      } catch (err) {
+        console.error('Error fetching jobs:', err);
+        container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Unable to load job listings at the moment. Please try again later.</p>';
+      }
+    }
+
+
+    // Load jobs when page loads
+    window.addEventListener('DOMContentLoaded', fetchJobs);
+
+    // Close modal logic
+    document.getElementById('close-modal').addEventListener('click', () => {
+      document.getElementById('application-modal').classList.remove('active');
+    });
+
+    // Handle modal application form submission to 'applicants' table with resume upload
+    document.getElementById('application-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const jobId = document.getElementById('modal-job-id').value;
+      const fullName = document.getElementById('applicant-name').value;
+      const email = document.getElementById('applicant-email').value;
+      const location = document.getElementById('applicant-location').value;
+      const salaryExpectation = document.getElementById('applicant-salary').value;
+      const fileInput = document.getElementById('applicant-resume');
+      const file = fileInput.files[0];
+
+      let resumeUrl = null;
+
+      try {
+        if (file) {
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+          const filePath = `resumes/${fileName}`;
+
+          const { error: uploadError } = await _supabase.storage
+            .from('resumes')
+            .upload(filePath, file);
+
+          if (uploadError) {
+            throw new Error(`Resume upload failed: ${uploadError.message}`);
+          }
+
+          const { data: publicUrlData } = _supabase.storage
+            .from('resumes')
+            .getPublicUrl(filePath);
+
+          resumeUrl = publicUrlData ? publicUrlData.publicUrl : filePath;
+        }
+
+        const { error } = await _supabase
+          .from('applicants')
+          .insert([{ 
+            job_id: jobId, 
+            full_name: fullName, 
+            email: email, 
+            location_preference: location, 
+            salary_expectation: salaryExpectation,
+            resume_url: resumeUrl
+          }]);
+
+        if (error) {
+          throw new Error(error.message);
+        }
+
+        alert('Application submitted successfully!');
+        document.getElementById('application-modal').classList.remove('active');
+        e.target.reset();
+
+      } catch (err) {
+        console.error('Error submitting application:', err);
+        alert('Error submitting application: ' + err.message);
+      }
+    });
+
+
+    document.getElementById('talentDatabaseForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+
+      const fullName = document.getElementById('fullName').value;
+      const email = document.getElementById('email').value;
+      const targetLocation = document.getElementById('targetLocation').value;
+      const salaryRange = document.getElementById('salaryRange').value;
+      const fileInput = document.getElementById('resumeFile');
+      const file = fileInput.files[0];
+
+
+      // Gather checked specialties
+      const selectedSpecialties = Array.from(document.querySelectorAll('input[name="specialty"]:checked'))
+        .map(cb => cb.value);
+     
+      const customSpecialty = document.getElementById('customSpecialty').value.trim();
+      if (customSpecialty) {
+        selectedSpecialties.push(customSpecialty);
+      }
+
+
+      // Gather checked work types
+      const selectedWorkTypes = Array.from(document.querySelectorAll('input[name="workType"]:checked'))
+        .map(cb => cb.value);
+
+
+      if (selectedWorkTypes.length === 0) {
+        alert('Please select at least one preferred work type (Remote, Hybrid, Onsite).');
+        return;
+      }
+
+
+      let resumeUrl = null;
+
+
+      try {
+        if (file) {
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+          const filePath = `resumes/${fileName}`;
+
+
+          // Upload file to Supabase Storage bucket named 'resumes'
+          const { error: uploadError } = await _supabase.storage
+            .from('resumes')
+            .upload(filePath, file);
+
+
+          if (uploadError) {
+            throw new Error(`Resume upload failed: ${uploadError.message}`);
+          }
+
+
+          const { data: publicUrlData } = _supabase.storage
+            .from('resumes')
+            .getPublicUrl(filePath);
+
+
+          resumeUrl = publicUrlData ? publicUrlData.publicUrl : filePath;
+        }
+
+
+        // Insert record into candidates table
+        const { data, error: dbError } = await _supabase
+          .from('candidates')
+          .insert([{
+            full_name: fullName,
+            email: email,
+            specialties: selectedSpecialties,
+            location_preference: targetLocation,
+            work_type: selectedWorkTypes,
+            salary_expectation: salaryRange,
+            resume_url: resumeUrl
+          }]);
+
+
+        if (dbError) {
+          throw new Error(`Database insert failed: ${dbError.message}`);
+        }
+
+
+        alert('Thank you for uploading your resume! We will notify you if a role opens up that meets your expectations.');
+        document.getElementById('talentDatabaseForm').reset();
+
+
+      } catch (err) {
+        console.error('Submission error:', err);
+        alert(`Submission failed: ${err.message}`);
+      }
+    });
+  </script>
+
+  <!-- JOB APPLICATION MODAL -->
+  <div id="application-modal" class="modal">
+    <div class="modal-content">
+      <span id="close-modal" class="close">&times;</span>
+      <h2>Apply for <span id="modal-job-title"></span></h2>
+      
+      <!-- Job Description Review Box -->
+      <label>Job Description</label>
+      <div id="modal-job-description" class="modal-job-desc-box">Loading job description...</div>
+
+      <form id="application-form">
+        <input type="hidden" id="modal-job-id" name="job_id">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label>Full Name</label>
+          <input type="text" id="applicant-name" required placeholder="e.g. Jane Doe">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label>Email</label>
+          <input type="email" id="applicant-email" required placeholder="e.g. jane@example.com">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label>Location</label>
+          <input type="text" id="applicant-location" required placeholder="e.g. Austin, TX">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label>Salary Expectation</label>
+          <input type="text" id="applicant-salary" placeholder="e.g. $130,000">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label>Upload Resume (PDF / Doc)</label>
+          <input type="file" id="applicant-resume" accept=".pdf,.doc,.docx" style="background: var(--cream); padding: 8px;" required>
+        </div>
+        <button type="submit" class="btn btn-orange" style="margin-top: 10px;">Submit Application</button>
+      </form>
+
+      <!-- SUCCESS MESSAGE -->
+      <div id="successMessage" style="display: none; margin-top: 20px; font-family: inherit; text-align: left;">
+        <p>Thank you for your application. The careers team will be in touch if there is a match.</p>
+        <p style="margin-top: 15px;">Sincerely,</p>
+        <p>The Talent Bundle Careers Team<br>
+        E: Careers@talentbundlecareers.com</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('application-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Hide the form and display the success message
+      document.getElementById('application-form').style.display = 'none';
+      document.getElementById('successMessage').style.display = 'block';
+    });
+
+    // Ensure close button resets both form visibility and hides the modal
+    document.getElementById('close-modal').addEventListener('click', function() {
+      document.getElementById('application-modal').style.display = 'none';
+      // Reset view for next time modal opens
+      document.getElementById('application-form').style.display = 'block';
+      document.getElementById('successMessage').style.display = 'none';
+    });
   </script>
 </body>
 </html>
