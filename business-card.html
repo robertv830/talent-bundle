@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Talent Bundle - Official Business Card</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Brand Colors */
+      --bright-blue: #0B63CE;
+      --medium-blue: #4E86B7;
+      --vibrant-orange: #F58220;
+      --navy-dark: #072B56;
+      --white: #FFFFFF;
+      --text-dark: #0F172A;
+      --text-muted: #475569;
+      --border-color: #CBD5E1;
+    }
+
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: 'Outfit', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body { 
+      background-color: #E2E8F0; 
+      padding: 3rem 1rem; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 2rem; 
+    }
+
+    .preview-heading { text-align: center; color: var(--navy-dark); }
+    .preview-heading h2 { font-weight: 800; font-size: 1.8rem; }
+    .preview-heading p { color: var(--text-muted); font-size: 0.95rem; }
+
+    .card-container {
+      display: flex;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* 3.5" x 2.0" Business Card Container */
+    .biz-card {
+      width: 420px;
+      height: 240px;
+      border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.6rem;
+    }
+
+    /* FRONT OF CARD */
+    .card-front {
+      background: var(--navy-dark);
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .front-main {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 0.4rem;
+    }
+
+    /* Screen blend mode eliminates the white background on dark backgrounds */
+    .front-emblem {
+      width: 76px;
+      height: 76px;
+      object-fit: contain;
+      mix-blend-mode: screen;
+      flex-shrink: 0;
+    }
+
+    .front-brand-name {
+      font-size: 2.1rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+    }
+
+    .front-brand-name span {
+      color: var(--vibrant-orange);
+    }
+
+    /* Clean single-line tagline layout */
+    .front-tagline {
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      color: #D1D5DB;
+      text-transform: uppercase;
+      margin-top: 6px;
+      white-space: nowrap;
+    }
+
+    .front-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+      padding-top: 0.6rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .website-link-front {
+      color: var(--white);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+    }
+
+    .orange-bottom-stripe {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: var(--vibrant-orange);
+    }
+
+    /* BACK OF CARD */
+    .card-back {
+      background: var(--white);
+      color: var(--text-dark);
+      border: 1px solid var(--border-color);
+    }
+
+    .back-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .person-name {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--bright-blue);
+      line-height: 1.1;
+    }
+
+    .person-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--vibrant-orange);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-top: 4px;
+    }
+
+    /* Multiply blend mode blends white into white/light backgrounds cleanly */
+    .back-emblem-img {
+      width: 68px;
+      height: 68px;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+    }
+
+    .back-middle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+
+    .contact-details {
+      font-size: 0.88rem;
+      color: var(--text-dark);
+      line-height: 1.7;
+      font-weight: 500;
+    }
+
+    .contact-details strong {
+      color: var(--bright-blue);
+      font-weight: 800;
+    }
+
+    .qr-container { text-align: center; }
+
+    .qr-code {
+      width: 78px;
+      height: 78px;
+      border: 2px solid var(--bright-blue);
+      border-radius: 8px;
+      padding: 3px;
+      background: var(--white);
+    }
+
+    .qr-label {
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: var(--bright-blue);
+      text-transform: uppercase;
+      margin-top: 4px;
+      display: block;
+      letter-spacing: 0.5px;
+    }
+
+    .left-accent-stripe {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 7px;
+      background: linear-gradient(180deg, var(--bright-blue) 0%, var(--vibrant-orange) 100%);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="preview-heading">
+    <h2>Talent Bundle Official Business Card</h2>
+    <p>3.5" x 2.0" Print Specs with Native CSS Styling</p>
+  </div>
+
+  <div class="card-container">
+    
+    <!-- FRONT OF CARD -->
+    <div class="biz-card card-front">
+      <div class="front-main">
+        <img src="TB icon only.JPG" alt="TB Emblem" class="front-emblem">
+        <div>
+          <div class="front-brand-name">Talent <span>Bundle</span></div>
+          <div class="front-tagline">Your Customized Recruiting Solution</div>
+        </div>
+      </div>
+      
+      <div class="front-bottom">
+        <div class="website-link-front">www.talentbundlegroup.com</div>
+      </div>
+      
+      <div class="orange-bottom-stripe"></div>
+    </div>
+
+    <!-- BACK OF CARD -->
+    <div class="biz-card card-back">
+      <div class="left-accent-stripe"></div>
+      
+      <div class="back-top" style="padding-left: 10px;">
+        <div>
+          <div class="person-name">Rob VanVliet</div>
+          <div class="person-title">Executive Recruiting Lead</div>
+        </div>
+        
+        <img src="TB icon only.JPG" alt="TB Icon" class="back-emblem-img">
+      </div>
+
+      <div class="back-middle" style="padding-left: 10px;">
+        <div class="contact-details">
+          <div><strong>P:</strong> (816) 462-8794</div>
+          <div><strong>E:</strong> Rob@talentbundlegroup.com</div>
+          <div><strong>W:</strong> www.talentbundlegroup.com</div>
+        </div>
+
+        <div class="qr-container">
+          <img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talentbundlegroup.com" alt="Scan to visit website">
+          <span class="qr-label">Scan to Visit</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
